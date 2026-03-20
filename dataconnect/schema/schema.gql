@@ -1,0 +1,58 @@
+type User @table {
+  displayName: String!
+  createdAt: Timestamp!
+  email: String
+  photoUrl: String
+  bio: String
+}
+
+type CelestialObject @table {
+  name: String!
+  type: String!
+  createdAt: Timestamp!
+  description: String
+  imageURL: String
+  constellation: String
+  discoveryDate: Date
+}
+
+type AstronomicalEvent @table {
+  name: String!
+  eventType: String!
+  eventDate: Timestamp!
+  createdAt: Timestamp!
+  description: String
+  peakTime: Timestamp
+  visibilityRegion: String
+}
+
+type Observation @table {
+  user: User!
+  celestialObject: CelestialObject
+  astronomicalEvent: AstronomicalEvent
+  observationDate: Timestamp!
+  location: String!
+  isPublic: Boolean!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  notes: String
+  rating: Int
+  equipmentUsed: String
+  imageUploadUrl: String
+}
+
+type FavoriteList @table {
+  user: User!
+  name: String!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  description: String
+}
+
+type FavoriteListItem @table {
+  favoriteList: FavoriteList!
+  celestialObject: CelestialObject
+  astronomicalEvent: AstronomicalEvent
+  position: Int!
+  notes: String
+}
