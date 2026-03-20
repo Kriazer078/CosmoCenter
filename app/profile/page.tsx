@@ -4,11 +4,11 @@ import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, User, Mail, Calendar, LogOut, Award, Star, Rocket, Camera, Loader2 } from 'lucide-react';
+import { ArrowLeft, User, Mail, Calendar, LogOut, Award, Star, Rocket, Camera, Loader2, Edit2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { storage } from '@/lib/firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 
 export default function ProfilePage() {
@@ -16,10 +16,16 @@ export default function ProfilePage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [updatingName, setUpdatingName] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/');
+    }
+    if (user && !newName) {
+      setNewName(user.displayName || "");
     }
   }, [user, loading, router]);
 
@@ -50,21 +56,59 @@ export default function ProfilePage() {
 
     setUploading(true);
     try {
-      const storageRef = ref(storage, `users/${user.uid}/avatar`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
+      const img = new window.Image();
+      img.src = URL.createObjectURL(file);
+      await new Promise((resolve) => { img.onload = resolve; });
       
-      await updateProfile(user, { photoURL: downloadURL });
+      const canvas = document.createElement('canvas');
+      const MAX_SIZE = 200;
+      let width = img.width;
+      let height = img.height;
+      if (width > height) {
+        if (width > MAX_SIZE) {
+          height *= MAX_SIZE / width;
+          width = MAX_SIZE;
+        }
+      } else {
+        if (height > MAX_SIZE) {
+          width *= MAX_SIZE / height;
+          height = MAX_SIZE;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, width, height);
+      
+      const base64DataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { avatarUrl: base64DataUrl });
       
       toast.success("Аватар обновлен!", { description: "Ваше новое фото успешно установлено." });
       
-      // Force page reload to show new image if context doesn't update immediately
       setTimeout(() => window.location.reload(), 1500);
     } catch (error: any) {
       console.error(error);
-      toast.error("Ошибка при загрузке", { description: "Убедитесь, что настроены правила Firebase Storage." });
+      toast.error("Ошибка при сохранении", { description: "Не удалось обновить профиль." });
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleSaveName = async () => {
+    if (!user || !newName.trim()) return;
+    setUpdatingName(true);
+    try {
+      await updateProfile(user, { displayName: newName.trim() });
+      toast.success("Имя обновлено!");
+      setIsEditingName(false);
+      setTimeout(() => window.location.reload(), 500); 
+    } catch (error) {
+      console.error(error);
+      toast.error("Ошибка при обновлении имени");
+    } finally {
+      setUpdatingName(false);
     }
   };
 
@@ -128,8 +172,8 @@ export default function ProfilePage() {
                   className="w-24 h-24 mx-auto bg-primary/20 rounded-full flex items-center justify-center border-2 border-primary/50 shadow-[0_0_30px_rgba(147,51,234,0.3)] mb-4 cursor-pointer relative overflow-hidden group/avatar"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  {user.photoURL ? (
-                    <img src={user.photoURL} alt="Avatar" className="w-full h-full rounded-full object-cover" />
+                  {userStats?.avatarUrl || user.photoURL ? (
+                    <img src={userStats?.avatarUrl || user.photoURL || ""} alt="Avatar" className="w-full h-full rounded-full object-cover" />
                   ) : (
                     <User className="h-10 w-10 text-primary" />
                   )}
@@ -152,9 +196,32 @@ export default function ProfilePage() {
                   className="hidden" 
                 />
                 
-                <h2 className="text-xl font-bold text-foreground mb-1 truncate">
-                  {user.displayName || "Космонавт"}
-                </h2>
+                {isEditingName ? (
+                  <div className="flex items-center justify-center gap-2 mb-1">
+                    <input 
+                      type="text" 
+                      value={newName} 
+                      onChange={(e) => setNewName(e.target.value)} 
+                      className="bg-background/50 border border-primary/50 text-foreground px-3 py-1 text-center rounded-md w-40 text-lg outline-none focus:border-primary"
+                      autoFocus
+                    />
+                    <button onClick={handleSaveName} disabled={updatingName} className="text-green-400 hover:text-green-300 transition-colors">
+                      {updatingName ? <Loader2 className="h-5 w-5 animate-spin" /> : <Check className="h-5 w-5" />}
+                    </button>
+                    <button onClick={() => { setIsEditingName(false); setNewName(user.displayName || ""); }} disabled={updatingName} className="text-red-400 hover:text-red-300 transition-colors">
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-2 mb-1 group/name">
+                    <h2 className="text-xl font-bold text-foreground truncate">
+                      {user.displayName || "Космонавт"}
+                    </h2>
+                    <button onClick={() => setIsEditingName(true)} className="text-muted-foreground hover:text-primary transition-colors opacity-0 group-hover/name:opacity-100">
+                      <Edit2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
                 <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-6">
                   <Mail className="h-4 w-4" />
                   <span className="truncate">{user.email}</span>

@@ -17,6 +17,7 @@ export interface UserStats {
   xp: number;
   level: number;
   rank: string;
+  avatarUrl?: string;
 }
 
 const RANKS = [
