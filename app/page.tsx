@@ -1,17 +1,19 @@
+import dynamic from "next/dynamic"
 import { Navigation } from "@/components/cosmo/navigation"
 import { HeroSection } from "@/components/cosmo/hero-section"
-import { AboutSection } from "@/components/cosmo/about-section"
-import { LearnSection } from "@/components/cosmo/learn-section"
-import { InteractiveSection } from "@/components/cosmo/interactive-section"
-import { LifeInSpaceSection } from "@/components/cosmo/life-in-space-section"
-import { KazakhstanSpaceSection } from "@/components/cosmo/kazakhstan-space-section"
-import { RoadmapSection } from "@/components/cosmo/roadmap-section"
-import { HistorySection } from "@/components/cosmo/history-section"
-import { PlanetsSection } from "@/components/cosmo/planets-section"
-import { MissionsSection } from "@/components/cosmo/missions-section"
-import { GallerySection } from "@/components/cosmo/gallery-section"
-import { ContactsSection } from "@/components/cosmo/contacts-section"
-import { Footer } from "@/components/cosmo/footer"
+
+const AboutSection = dynamic(() => import("@/components/cosmo/about-section").then(mod => ({ default: mod.AboutSection })))
+const LearnSection = dynamic(() => import("@/components/cosmo/learn-section").then(mod => ({ default: mod.LearnSection })))
+const InteractiveSection = dynamic(() => import("@/components/cosmo/interactive-section").then(mod => ({ default: mod.InteractiveSection })))
+const LifeInSpaceSection = dynamic(() => import("@/components/cosmo/life-in-space-section").then(mod => ({ default: mod.LifeInSpaceSection })))
+const KazakhstanSpaceSection = dynamic(() => import("@/components/cosmo/kazakhstan-space-section").then(mod => ({ default: mod.KazakhstanSpaceSection })))
+const RoadmapSection = dynamic(() => import("@/components/cosmo/roadmap-section").then(mod => ({ default: mod.RoadmapSection })))
+const HistorySection = dynamic(() => import("@/components/cosmo/history-section").then(mod => ({ default: mod.HistorySection })))
+const PlanetsSection = dynamic(() => import("@/components/cosmo/planets-section").then(mod => ({ default: mod.PlanetsSection })))
+const MissionsSection = dynamic(() => import("@/components/cosmo/missions-section").then(mod => ({ default: mod.MissionsSection })))
+const GallerySection = dynamic(() => import("@/components/cosmo/gallery-section").then(mod => ({ default: mod.GallerySection })))
+const ContactsSection = dynamic(() => import("@/components/cosmo/contacts-section").then(mod => ({ default: mod.ContactsSection })))
+const Footer = dynamic(() => import("@/components/cosmo/footer").then(mod => ({ default: mod.Footer })))
 
 export default function CosmoCenter() {
   return (
