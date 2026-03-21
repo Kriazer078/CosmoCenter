@@ -69,14 +69,14 @@ export function HeroSection() {
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-          <Button asChild size="lg" className="neon-glow hover:scale-105 transition-transform text-lg px-8 py-6 cursor-pointer">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 w-full max-w-md mx-auto sm:max-w-none">
+          <Button asChild size="lg" className="neon-glow hover:scale-105 transition-transform text-lg px-8 py-6 cursor-pointer w-full sm:w-auto">
             <a href="#about">Начать обучение</a>
           </Button>
           <Button
             size="lg"
             variant="outline"
-            className="group border-primary/50 hover:bg-primary/10 text-lg px-8 py-6 cursor-pointer"
+            className="group border-primary/50 hover:bg-primary/10 text-lg px-8 py-6 cursor-pointer w-full sm:w-auto"
             onClick={() => setIsVideoOpen(true)}
           >
             <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -85,7 +85,7 @@ export function HeroSection() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 max-w-4xl mx-auto">
           {[
             { value: "400B+", label: "Звёзд в галактике" },
             { value: "8", label: "Планет системы" },
@@ -94,12 +94,12 @@ export function HeroSection() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="glass rounded-xl p-4 hover:neon-glow transition-all duration-500"
+              className="glass rounded-xl p-3 sm:p-4 hover:neon-glow transition-all duration-500"
             >
-              <div className="text-2xl md:text-3xl font-bold text-primary text-glow">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-primary text-glow">
                 {stat.value}
               </div>
-              <div className="text-sm text-muted-foreground mt-1">
+              <div className="text-xs sm:text-sm text-muted-foreground mt-1">
                 {stat.label}
               </div>
             </div>

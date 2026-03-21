@@ -70,14 +70,13 @@ export function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
         <Button
           variant="ghost"
           size="icon"
           className="lg:hidden"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
         </Button>
       </div>
 
@@ -100,8 +99,10 @@ export function Navigation() {
             </Link>
           ))}
           <div className="mt-4 flex flex-col gap-3">
-            <AuthModal />
-            <Button asChild className="neon-glow cursor-pointer" onClick={() => setIsOpen(false)}>
+            <div className="w-full">
+              <AuthModal />
+            </div>
+            <Button asChild className="neon-glow cursor-pointer w-full text-lg py-6" onClick={() => setIsOpen(false)}>
               <a href="#planets">Начать путешествие</a>
             </Button>
           </div>

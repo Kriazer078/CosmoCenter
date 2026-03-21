@@ -72,11 +72,11 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+          <p className="text-sm text-muted-foreground order-2 md:order-1">
             © {new Date().getFullYear()} CosmoCenter. Все права защищены.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 order-1 md:order-2">
             {footerLinks.legal.map((link) => (
               <Link
                 key={link.name}

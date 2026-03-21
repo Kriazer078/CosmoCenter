@@ -129,7 +129,7 @@ export function PlanetsSection() {
             <p className="text-muted-foreground text-lg mb-8">
               {selectedPlanet.description}
             </p>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="glass rounded-xl p-4">
                 <div className="text-sm text-muted-foreground mb-1">
                   Расстояние от Солнца
