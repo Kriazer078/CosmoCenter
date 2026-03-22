@@ -115,15 +115,12 @@ export function HeroSection() {
       {/* Video Modal */}
       <Dialog open={isVideoOpen} onOpenChange={setIsVideoOpen}>
         <DialogContent className="max-w-5xl w-[90vw] p-0 bg-black/90 border-white/10 overflow-hidden aspect-video rounded-2xl">
-          <iframe
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/EEIk7gwjgIM?autoplay=1"
+          <video
+            src="/videocosmos.mp4"
             title="Space Exploration Video"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="w-full h-full"
+            controls
+            autoPlay
+            className="w-full h-full object-cover"
           />
         </DialogContent>
       </Dialog>
